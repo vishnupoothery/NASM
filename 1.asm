@@ -4,8 +4,10 @@ result: resw 1
 temp: resb 1
 digit: resb 1
 noOfDigits: resb 1
-matrix: resw 1
+matrix: resw 100
 n: resb 1
+i: resb 1
+j: resb 1
 
 section .data
 _space: db ' '
@@ -20,12 +22,69 @@ len2: equ $-msg2
 section .text
 global _start:
 _start:
-    
+    mov eax,4
+    mov ebx,1
+    mov ecx,msg1
+    mov edx,len1
+    int 80h
+
+    call read
+    mov ax,word[result]
+    mov byte[n],al
+    mov al,byte[n]
+    mul al
+    mov byte[temp],al
+    mov ebx,matrix
+
+loop1:
+    cmp byte[temp],0
+    je loopEnd
+    call read
+    mov ax,word[result]
+    mov word[ebx],ax
+    dec byte[temp]
+    add ebx,2
+    jmp loop1
+    loopEnd:
+
+    call printMatrix
 
 exit:
     mov eax,1
     mov ebx,0
     int 80h
+
+printMatrix:
+    pusha
+    mov ebx,matrix
+    mov al,byte[n]
+    mov byte[i],al
+
+    ploop1:
+        cmp byte[i],0
+        je endPloop1
+        mov al,byte[n]
+        mov byte[j],al
+        ploop2:
+            cmp byte[j],0
+            je endPloop2
+
+            mov ax,word[ebx]
+            push ebx
+            mov word[value],ax
+            call print
+            call prints
+            pop ebx
+            add ebx,2
+            dec byte[j]
+            jmp ploop2
+        endPloop2:
+            call printl
+            dec byte[i]
+            jmp ploop1
+        endPloop1:
+    popa
+    ret
 
 
 read:
