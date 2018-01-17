@@ -4,21 +4,23 @@ result: resw 1
 temp: resb 1
 digit: resb 1
 noOfDigits: resb 1
-
+matrix: resw 1
+n: resb 1
 
 section .data
 _space: db ' '
 _ls: equ $-_space
 _nl: db ' ',0Ah
 _nll: equ $-_nl
+msg1: db 'Enter size of matrix : '
+len1: equ $-msg1
+msg2: db 'Enter values for matrix',0Ah
+len2: equ $-msg2
 
 section .text
 global _start:
 _start:
-    call read
-    mov ax,word[result]
-    mov word[value],ax
-    call print
+    
 
 exit:
     mov eax,1
