@@ -47,6 +47,41 @@ loop1:
     jmp loop1
     loopEnd:
 
+    mov ebx,matrix
+    mov byte[i],0
+    loop2:
+        push ebx
+        mov al,byte[n]
+        mov dl,2
+        mul dl
+        mov byte[j],al
+        cmp byte[i],al
+        je loop2End
+        sub byte[j],2
+        mov al,byte[i]
+        sub byte[j],al
+        mov al,byte[i]
+        movzx edx,al
+        mov ecx,ebx
+        add ebx,edx
+        movzx edx,byte[j]
+        add ecx,edx
+        mov ax,word[ebx]
+        mov dx,word[ecx]
+        mov word[ebx],dx
+        mov word[ecx],ax
+        pop ebx
+        mov al,byte[n]
+        mov dl,2
+        mul dl
+        movzx ecx,al
+        add ebx,ecx
+        inc byte[i]
+        inc byte[i]
+        jmp loop2
+    loop2End:
+        
+
     call printMatrix
 
 exit:
