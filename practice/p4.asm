@@ -3,8 +3,11 @@ value : resw 1
 result : resw 1
 _temp : resb 1
 noOfDigits: resb 1
+num1 : resw 1
 
 section .data
+nl : db ' ',0Ah
+nll : equ $-nl
 
 section .text
 global _start:
@@ -12,13 +15,28 @@ _start:
 
 	call read
 	mov ax,word[result]
+	mov word[num1],ax
+	call read
+	mov ax,word[result]
+	add ax,word[num1]
 	mov word[value],ax
 	call print
+	call printl
 
 exit:
 	mov eax,1
 	mov ebx,0
 	int 80h
+
+printl:
+	pusha
+	mov eax,4
+	mov ebx,1
+	mov ecx,nl
+	mov edx,nll
+	int 80h
+	popa
+	ret
 print:
 	pusha
 	mov byte[noOfDigits],0
