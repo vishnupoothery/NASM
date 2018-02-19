@@ -41,7 +41,7 @@ end:
 fact:
 	pusha
 	cmp word[value],1
-	je endFact
+	jb endFact
 	mov ax,word[value]
 	mov bx,word[result]
 	mul bx
