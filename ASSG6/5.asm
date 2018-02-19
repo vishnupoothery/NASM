@@ -5,13 +5,10 @@ _temp		: resb 1
 temp		: resw 1
 noOfDigits	: resw 1
 i			: resw 1
-n			: resw 1
-f1			: resw 1
-f2			: resw 1
-f3			: resw 1
+sum			: resw 1
 
 section .data
-msg1		: db 'Enter n : '
+msg1		: db 'Enter number '
 len1		: equ $-msg1
 nl			: db ' ',0Ah
 nll			: equ $-nl
@@ -28,62 +25,20 @@ _start:
 	int 80h
 	call read
 	mov ax,word[result]
-	mov word[n],ax
-	mov word[f1],0
-	mov word[f2],1
-	mov word[i],1
-	call fib
+	mov word[value],ax
+	mov word[result],1
+	call fact
+	mov ax,word[result]
+	mov word[value],ax
+	call print
 	call printl
+	
 end:
 	mov eax,1
 	mov ebx,0
 	int 80h
 	
 fib:
-	pusha
-	mov ax,word[i]
-	cmp ax,1
-	je _pOne
-	mov ax,word[i]
-	cmp ax,2
-	je _pTwo
-	mov ax,word[f1]
-	add ax,word[f2]
-	cmp ax,word[n]
-	jg endFib
-	mov word[f3],ax
-	mov word[value],ax
-	mov ax,word[f2]
-	mov word[f1],ax
-	mov ax,word[f3]
-	mov word[f2],ax
-	call print
-	call prints
-	inc word[i]
-	call fib
-	jmp endFib
-	_pOne:
-		mov ax,word[f1]
-		cmp ax,word[n]
-		jg endFib
-		mov word[value],ax
-		call print
-		call prints
-		inc word[i]
-		call fib
-		jmp endFib
-	_pTwo:
-		mov ax,word[f2]
-		cmp ax,word[n]
-		jg endFib
-		mov word[value],ax
-		call print
-		call prints
-		inc word[i]
-		call fib
-	endFib:
-	popa
-	ret
 
 printl:
 	pusha
@@ -130,11 +85,9 @@ print:
 	mov byte[noOfDigits],0
 	cmp word[value],0
 	jne _printer
-	mov byte[_temp],0
-	add byte[_temp],30h
 	mov eax,4
 	mov ebx,1
-	mov ecx,_temp
+	mov ecx,30h
 	mov edx,1
 	int 80h
 	jmp _endPrinting
