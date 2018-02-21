@@ -4,7 +4,7 @@ result		: resw 1
 _temp		: resb 1
 temp		: resw 1
 noOfDigits	: resw 1
-i			: resw 1
+n			: resw 1
 sum			: resw 1
 
 section .data
@@ -25,9 +25,9 @@ _start:
 	int 80h
 	call read
 	mov ax,word[result]
-	mov word[value],ax
-	mov word[result],1
-	call fact
+	mov word[n],ax
+	mov word[result],0
+	call fib
 	mov ax,word[result]
 	mov word[value],ax
 	call print
@@ -39,7 +39,26 @@ end:
 	int 80h
 	
 fib:
-
+	pusha
+	cmp word[n],0
+	je isZero
+	cmp word[n],1
+	je isOne
+	dec word[n]
+	movzx eax,word[n]
+	push eax
+	call fib
+	pop eax
+	mov word[n],ax
+	dec word[n]
+	call fib
+	jmp isZero
+isOne:
+	inc word[result]
+isZero:
+	popa
+	ret
+	
 printl:
 	pusha
 	mov eax,4
